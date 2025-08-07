@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Social links</title>
+        <link href="/style.css" rel="stylesheet">
+        <link rel="icon" type="image/x-icon" href="/favicon.png">
+    </head>
+    <body>
+        <p>Social links for <code>fds_t</code>. That's where all the art and stuff is.</p>
+        <ul>
+            <!-- Use DID for bsky in case i change the domain -->
+            <li><a href="https://bsky.app/profile/did:plc:vswnri7goqzhoe3cj5zss2ea">bluesky</a></li>
+            <li><a href="https://tumblr.com/fds-t">tumblr</a></li>
+            <li><a href="https://pixiv.me/fds_t">pixiv</a></li>
+            <li><a href="https://twitter.com/fds_ty">twitter</a></li>
+            <li><a href="/">website</a></li>
+        </ul>
+
+        <br>
+        <br>
+        <br>
+
+        <form id="cool form">
+            <p>Bonus form to evaluate arbitrary javascript (might not work)<br>
+                <textarea type="text" id="cool text field"></textarea><button>eval</button>
+            </p>
+        </form>
+
+        <script>
+            const form = document.getElementById("cool form");
+            form.addEventListener("submit", (e) => {
+                e.preventDefault(); // Why would you reload the page when you can do this fun stuff instead?
+                const text = document.getElementById("cool text field");
+                eval(text.value);
+            });
+        </script>
+    </body>
+</html>
