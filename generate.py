@@ -1,6 +1,5 @@
-from io import BufferedReader
 import re
-import os, sys
+import os
 import shutil
 from pathlib import Path
 from datetime import date
@@ -108,18 +107,20 @@ if __name__ == "__main__":
         prog="generate",
         description="Generates the website"
     )
+    parser.add_argument("--clean", action="store_true")
     parser.add_argument("-i", required=True)
     parser.add_argument("-o", required=True)
     args = parser.parse_args()
 
     build_dir: Path = Path(os.getcwd()) / args.o
+
     if os.path.exists(build_dir):
         print("Build directory already exists!")
         print("  Removing build directory", build_dir)
         shutil.rmtree(build_dir)
 
-    print("Creating build directory", build_dir)
-    os.mkdir(build_dir)
+    if args.clean:
+        exit()
 
     source_dir: Path = Path(os.getcwd()) / args.i
 
