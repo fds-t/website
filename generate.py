@@ -112,7 +112,8 @@ if __name__ == "__main__":
     parser.add_argument("-o", required=True)
     args = parser.parse_args()
 
-    build_dir: Path = Path(os.getcwd()) / args.o
+    cwd = Path(os.getcwd())
+    build_dir: Path = cwd / args.o
 
     if os.path.exists(build_dir):
         print("Build directory already exists!")
@@ -136,4 +137,5 @@ if __name__ == "__main__":
             elif type(lines) is list:
                 with open(file_path, "w") as f:
                     f.writelines(lines)
+    shutil.copytree(cwd / "res/", build_dir / "res/")
     print("Done!")
