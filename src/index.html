@@ -6,6 +6,19 @@
         </title>
         <link href="/style.css" rel="stylesheet">
         <link rel="icon" type="image/x-icon" href="/favicon.png">
+        <style>
+            .bsky_containers {
+                display:flex;
+            }
+
+            .bsky_box {
+                max-width: 300px;
+            }
+
+            .linked_list {
+                font-size: 1.5rem;
+            }
+        </style>
     </head>
     <body>
         <h1><code>fds_t</code>'s website</h1>
@@ -15,11 +28,13 @@
         <img src="welcome.png" title="Koishi says welcome!">
 
         <h2>Things you might've come here to click on</h2>
-        <ul>
-            <li><a href="social.html">Socials</a></li>
-            <li><a href="art">Art</a></li>
-            <li><a href="game">Games</a></li>
-        </ul>
+        <div class="linked_list">
+            <ul>
+                <li><a href="links.html">Socials</a></li>
+                <li><a href="art">Art</a></li>
+                <li><a href="game">Game</a></li>
+            </ul>
+        </div>
 
         <h2>Other things it's less likely for you to have come here to click on</h2>
         <ul>
@@ -29,17 +44,9 @@
             <li><a href="very_real_nsfw.html">nsfw gallery</a> (warning! 18+)</li>
         </ul>
 
-        <h3>Most recent bsky post</h3>
-        <p>(last checked: ___CURR_DATE)</p>
+        ___BSKY_LATEST
 
-        ___BSKY_MOST_RECENT
-
-        <h3>Most recent touhou tagged bsky post</h3>
-        <p>(probably art)</p>
-
-        ___BSKY_MOST_RECENT_TOUHOU
-
-        <p>Copyright (C) 2025 <code>fds_t</code> all rights reserved unless otherwise stated.</p>
+        <p>Copyright (C) 2025 <code>fds_t</code> all rights reserved etc etc (unless otherwise stated)</p>
         <p>(website design inspired by my cs professor(s))</p>
     </body>
 </html>

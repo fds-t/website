@@ -1,4 +1,3 @@
-import re
 import os
 import shutil
 from pathlib import Path
@@ -6,16 +5,17 @@ from datetime import date
 import requests
 import argparse
 
-re.compile("")
+IMG_SUFFIXES = { ".png", ".jpg", ".jpeg", ".bmp" }
+
 
 def curr_date() -> str:
     return date.today().isoformat()
 
-def latest_bsky(client):
+def bsky_latest_post(client):
     actor_did, post_did = bsky_get_latest_actor_post(client.me.did, client)
     return bsky_oembed(f"https://bsky.app/profile/{actor_did}/post/{post_did}")["html"]
 
-def latest_bsky_touhou(client):
+def bsky_latest_post_touhou(client):
     actor_did, post_did = bsky_get_latest_actor_post(client.me.did, client, tag="touhou")
     return bsky_oembed(f"https://bsky.app/profile/{actor_did}/post/{post_did}")["html"]
 
@@ -66,9 +66,38 @@ def bsky_get_latest_actor_post(actor_did, client, tag=None):
                 # print(f"{postview.post.author.did} != {actor_did}")
                 pass
 
-client = None
+def fetch_latest_bsky(client):
+    b_date = curr_date()
+    b_post = bsky_latest_post(client)
+    b_post_touhou = bsky_latest_post_touhou(client)
 
-def process_file(filename: Path):
+    return (b_date, b_post, b_post_touhou)
+
+def handle_latest_bsky(build_dir: Path):
+    with open(build_dir / "bsky_latest.txt", "r") as f:
+        lines = f.readlines()
+
+    b_date, b_post, b_post_touhou = lines
+
+    template = f"""
+    <h3>Most recent bsky posts</h3>
+        <p>(last checked: {b_date})</p>
+
+        <div class="bsky_containers">
+            <div class="bsky_box">
+                <p>Most recent</p>
+                {b_post}
+            </div>
+
+            <div class="bsky_box">
+                <p>Most recent #touhou</p>
+                {b_post_touhou}
+            </div>
+        </div>
+    """
+    return template
+
+def process_file(filename: Path, build_dir: Path):
     print(f"  processing {filename}! process process...")
 
     if not os.path.isfile(filename):
@@ -85,24 +114,11 @@ def process_file(filename: Path):
     for i,line in enumerate(lines):
         if "___" in line:
             print("FOUND LINE TO MESS WITH:", repr(line))
-            if "___CURR_DATE" in line:
-                lines[i] = line.replace("___CURR_DATE", curr_date())
-            if "___BSKY_MOST_RECENT" in line:
-                lines[i] = line.replace("___BSKY_MOST_RECENT", latest_bsky(client))
-            if "___BSKY_MOST_RECENT_TOUHOU" in line:
-                lines[i] = line.replace("___BSKY_MOST_RECENT_TOUHOU", latest_bsky_touhou(client))
+            if "___BSKY_LATEST" in line:
+                lines[i] = handle_latest_bsky(build_dir)
     return lines
 
 if __name__ == "__main__":
-
-    from atproto import Client
-    import atproto_client
-
-    username, password = bsky_get_credentials()
-
-    client = Client()
-    client.login(username, password)
-
     parser = argparse.ArgumentParser(
         prog="generate",
         description="Generates the website"
@@ -110,26 +126,69 @@ if __name__ == "__main__":
     parser.add_argument("--clean", action="store_true")
     parser.add_argument("-i", required=True)
     parser.add_argument("-o", required=True)
+    parser.add_argument("--ignore_bsky", action="store_true")
     args = parser.parse_args()
+
 
     cwd = Path(os.getcwd())
     build_dir: Path = cwd / args.o
+    out_site: Path = build_dir / "site/"
 
-    if os.path.exists(build_dir):
-        print("Build directory already exists!")
-        print("  Removing build directory", build_dir)
-        shutil.rmtree(build_dir)
+    if os.path.exists(out_site):
+        print("Built site directory already exists!")
+        print("  Removing built site directory", out_site)
+        shutil.rmtree(out_site)
 
     if args.clean:
+        if os.path.exists(build_dir):
+            print("Build directory already exists!")
+            print("  Removing build directory", build_dir)
+            shutil.rmtree(build_dir)
         exit()
 
     source_dir: Path = Path(os.getcwd()) / args.i
 
+    out_res = out_site / "res/"
+
+    shutil.copytree(cwd / "res/", out_res)
+
+    print("files in res:")
+    img_files = []
+    for x in out_res.rglob("*"):
+        file_path = Path(str(x).replace(str(out_res), "/res"))
+
+        print("   ", file_path, end="")
+
+        if file_path.suffix in IMG_SUFFIXES:
+            img_files.append(file_path)
+            print(" (img)")
+        else:
+            print()
+
+
+    with open(out_res / "art" / "test_all.txt", "w") as f:
+        f.writelines([str(file) + "\n" for file in img_files])
+
+    if not args.ignore_bsky:
+        print("Handling bsky integration...")
+        from atproto import Client
+        import atproto_client
+
+        username, password = bsky_get_credentials()
+
+        client = Client()
+        client.login(username, password)
+
+        bsky_latest = fetch_latest_bsky(client)
+
+        with open(build_dir / "bsky_latest.txt", "w") as f:
+            f.writelines([(repr(str(text))[1:-1] + "\n") for text in bsky_latest])
+
     for x in source_dir.rglob("*"):
         # print(Path(str(x).replace(str(source_dir), str(build_dir))))
-        lines = process_file(x)
+        lines = process_file(x, build_dir)
         if lines is not None:
-            file_path = Path(str(x).replace(str(source_dir), str(build_dir)))
+            file_path = Path(str(x).replace(str(source_dir), str(out_site)))
             file_path.parent.mkdir(exist_ok=True, parents=True)
             if type(lines) is bytes:
                 with open(file_path, "wb") as f:
@@ -137,5 +196,5 @@ if __name__ == "__main__":
             elif type(lines) is list:
                 with open(file_path, "w") as f:
                     f.writelines(lines)
-    shutil.copytree(cwd / "res/", build_dir / "res/")
+
     print("Done!")
