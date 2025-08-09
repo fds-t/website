@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>fds' Art</title>
         <link href="/style.css" rel="stylesheet">
         <link rel="icon" type="image/x-icon" href="/favicon.png">
@@ -8,5 +10,24 @@
     <body>
         <p>todo!!</p>
         <p>i haven't bothered adding anything yet. So far the most complete place would probably be my <a href="https://twitter.com/fds_ty/media">twitter</a></p>
+
+        <h2>Auto image loading using js test</h2>
+        <div id="generate_thing"></div>
+
+        <script>
+            let div = document.getElementById("generate_thing");
+
+            fetch("/res/art/test_all.txt")
+                .then(r => r.text())
+                .then(t => {
+                    const images = t.split("\n");
+                    const html = images.map(img => `<img src="${img}">\n`);
+                    div.innerHTML = html.join("");
+                })
+                .catch(e => {
+                    console.log(e);
+                    div.innerHTML = "<p><b>Failed to load images! Is javascript enabled?</b></p>";
+                });
+        </script>
     </body>
 </html>
