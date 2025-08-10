@@ -8,7 +8,7 @@ Now, a sensible person would likely use an already existing static site generato
 
 ## Requirements
 
-A "resources" folder named `res/` is expected to be in the same directory as the script itself.
+A "resources" folder named `res/` is expected to be in the same directory as the script.
 
 Outside of bsky integration, the regular site requires nothing more than what's included with `python3` itself.
 
@@ -17,7 +17,7 @@ For bsky integration, the following libraries are also required:
 - `requests`
 - `atproto`
 
-Additionally, to be able to fetch the bsky posts, authentication is required. The script expects a file called `bsky_info` containing a username and password separated by a space to lie in the same directory as the script itself.
+Additionally, to be able to fetch the bsky posts, authentication is required. The script expects a file called `bsky_info` containing a username and password separated by a space to lie in the same directory as the script.
 
 ## Building
 
