@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>testing</title>
+    </head>
+    <body>
+        <p>Test of uploading zip file as bin. Done mainly for curiousity's sake.</p>
+
+        <button id="bin_button">Download as test.bin</button>
+        <button id="zip_button">Download as test.zip</button>
+        <script>
+            const download_dialog = (url, filename) => {
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+
+            let btn = document.getElementById("zip_button");
+            btn.addEventListener("click", () => download_dialog("/res/test.bin", "test.zip"));
+
+            btn = document.getElementById("bin_button");
+            btn.addEventListener("click", () => download_dialog("/res/test.bin", "test.bin"));
+        </script>
+    </body>
+</html>
