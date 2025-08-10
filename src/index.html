@@ -13,8 +13,10 @@
                 display:flex;
             }
 
-            .bsky_box {
-                max-width: 300px;
+            @media (max-width: 768px) {
+                .bsky_containers {
+                    display: grid;
+                }
             }
         </style>
     </head>
