@@ -7,21 +7,105 @@
         <link href="/style.css" rel="stylesheet">
         <link rel="icon" type="image/x-icon" href="/favicon.png">
         <style>
+            .linked_list {
+                display: grid;
+            }
+
+            /* This will probably be the only time I'll actually use "real" css on this site.... probably */
+            @media (max-width: 768px) {
+                .linked_list {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+
+                .linked_list > a {
+                    box-sizing: border-box;
+                    border-radius: 10px;
+                    padding: 1em;
+                    margin: 3px;
+                    width: 66%;
+                    font-size: larger;
+                    text-align: center;
+                    text-decoration: none;
+                }
+
+                .box_bsky {
+                    border: 2px solid #1c2228;
+                    background-color: #0a7aff;
+                    color: white;
+                }
+
+                .box_tumblr {
+                    border: 2px solid #00b8ff;
+                    background-color: #001935;
+                    color: white;
+                }
+
+                .box_pixiv {
+                    border: 2px solid #2e5ea7;
+                    background-color: #0096fa;
+                    color: white;
+                }
+
+                .box_twitter {
+                    border: 2px solid #71767b;
+                    background-color: #000000;
+                    color: white;
+                }
+
+                .box_website {
+                    border: 2px solid #000000;
+                    background-color: #ffffff;
+                    color: inherit;
+                    image-rendering: pixelated;
+                }
+            }
+
+            .icon_bsky {
+                background-color: #0a7aff;
+            }
+
+            .icon_tumblr {
+                background-color: #001935;
+                color: white;
+            }
+
+            .icon_pixiv {
+                background-color: #0096fa;
+                color: white;
+            }
+
+            .icon_twitter {
+                background-color: #000000;
+                color: white;
+            }
+
             .eval_form {
-                margin-top: 100%;
+                margin-top: 66%;
             }
         </style>
     </head>
     <body>
-        <p>Social links for <code>fds_t</code>. That's where all the art and stuff is.</p>
-        <ul>
+        <p>Social links of <code>fds_t</code>. That's where all the art and stuff is.</p>
+        <div class="linked_list">
             <!-- Note: Use DID for bsky in case I change the name/domain -->
-            <li><a href="https://bsky.app/profile/did:plc:vswnri7goqzhoe3cj5zss2ea">bluesky</a></li>
-            <li><a href="https://tumblr.com/fds-t">tumblr</a></li>
-            <li><a href="https://pixiv.me/fds_t">pixiv</a></li>
-            <li><a href="https://twitter.com/fds_ty">twitter</a></li>
-            <li><a href="/">website</a></li>
-        </ul>
+            <a class="box_bsky" href="https://bsky.app/profile/did:plc:vswnri7goqzhoe3cj5zss2ea">
+                <svg width="16" height="16" viewBox="0 0 568 501" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon_bsky">
+                    <path d="M123.121 33.6637C188.241 82.5526 258.281 181.681 284 234.873C309.719 181.681 379.759 82.5526 444.879 33.6637C491.866 -1.61183 568 -28.9064 568 57.9464C568 75.2916 558.055 203.659 552.222 224.501C531.947 296.954 458.067 315.434 392.347 304.249C507.222 323.8 536.444 388.56 473.333 453.32C353.473 576.312 301.061 422.461 287.631 383.039C285.169 375.812 284.017 372.431 284 375.306C283.983 372.431 282.831 375.812 280.369 383.039C266.939 422.461 214.527 576.312 94.6667 453.32C31.5556 388.56 60.7778 323.8 175.653 304.249C109.933 315.434 36.0535 296.954 15.7778 224.501C9.94525 203.659 0 75.2916 0 57.9464C0 -28.9064 76.1345 -1.61183 123.121 33.6637Z" fill="white"/>
+                </svg> - bluesky
+            </a>
+            <a class="box_tumblr" href="https://tumblr.com/fds-t">
+                <b class="icon_tumblr">&nbsp;t&nbsp;</b> - tumblr
+            </a>
+            <a class="box_pixiv" href="https://pixiv.me/fds_t">
+                <b class="icon_pixiv">&nbsp;p&nbsp;</b> - pixiv
+            </a>
+            <a class="box_twitter" href="https://twitter.com/fds_ty">
+                <b class="icon_twitter">&nbsp;𝕋&nbsp;</b> - twitter
+            </a>
+            <a class="box_website" href="/"><img src=/favicon.png> - website</a>
+        </div>
 
         <form id="cool form" class="eval_form">
             <p>Bonus form to evaluate arbitrary javascript</p>
