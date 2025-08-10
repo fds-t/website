@@ -11,13 +11,12 @@ IMG_SUFFIXES = { ".png", ".jpg", ".jpeg", ".bmp" }
 def curr_date() -> str:
     return date.today().isoformat()
 
-def bsky_latest_post(client):
-    actor_did, post_did = bsky_get_latest_actor_post(client.me.did, client)
-    return bsky_oembed(f"https://bsky.app/profile/{actor_did}/post/{post_did}")["html"]
-
-def bsky_latest_post_touhou(client):
-    actor_did, post_did = bsky_get_latest_actor_post(client.me.did, client, tag="touhou")
-    return bsky_oembed(f"https://bsky.app/profile/{actor_did}/post/{post_did}")["html"]
+def bsky_latest_post(client, tag=None):
+    result = bsky_get_latest_actor_post(client.me.did, client, tag)
+    if result is not None:
+        actor_did, post_did = result
+    oembed_result = bsky_oembed(f"https://bsky.app/profile/{actor_did}/post/{post_did}")
+    return oembed_result["html"] if oembed_result is not None else None
 
 def bsky_oembed(url: str):
     query = {
@@ -49,7 +48,7 @@ def bsky_is_tag_in_facets(facets, tag):
                     return True
     return False
 
-def bsky_get_latest_actor_post(actor_did, client, tag=None):
+def bsky_get_latest_actor_post(actor_did, client, tag=None) -> tuple[str,str] | None:
     cursor = ""
     post_did = None
 
@@ -69,7 +68,7 @@ def bsky_get_latest_actor_post(actor_did, client, tag=None):
 def fetch_latest_bsky(client):
     b_date = curr_date()
     b_post = bsky_latest_post(client)
-    b_post_touhou = bsky_latest_post_touhou(client)
+    b_post_touhou = bsky_latest_post(client, tag="touhou")
 
     return (b_date, b_post, b_post_touhou)
 
@@ -81,21 +80,42 @@ def handle_latest_bsky(build_dir: Path):
 
     template = f"""
     <h3>Most recent bsky posts</h3>
-        <p>(last checked: {b_date})</p>
 
-        <div class="bsky_containers">
-            <div class="bsky_box">
-                <p>Most recent</p>
-                {b_post}
-            </div>
+    <p>(last checked: {b_date})</p>
 
-            <div class="bsky_box">
-                <p>Most recent #touhou</p>
-                {b_post_touhou}
-            </div>
+    <div class="bsky_containers">
+        <div class="bsky_box">
+            <p>Most recent post</p>
+            {b_post}
         </div>
+
+        <div class="bsky_box">
+            <p>Most recent #touhou post</p>
+            {b_post_touhou}
+        </div>
+    </div>
     """
     return template
+
+def handle_imgs(line: str, build_dir: Path) -> str:
+    text = line.strip()
+
+    start = text.find("{") + 2
+    end = text.find("}")
+
+
+    filename = build_dir / "site" / text[start:end]
+
+    print("    reading images from", filename)
+
+    with open(filename, "r") as f:
+        images = f.readlines()
+
+    innerhtml = '<div id="static_thing">'
+    for img in images:
+        innerhtml += f'<img src="{img}">\n'
+    innerhtml += '</div">'
+    return innerhtml
 
 def process_file(filename: Path, build_dir: Path):
     print(f"  processing {filename}! process process...")
@@ -113,9 +133,11 @@ def process_file(filename: Path, build_dir: Path):
         lines = f.readlines()
     for i,line in enumerate(lines):
         if "___" in line:
-            print("FOUND LINE TO MESS WITH:", repr(line))
+            print("   FOUND LINE TO MESS WITH:", repr(line))
             if "___BSKY_LATEST" in line:
                 lines[i] = handle_latest_bsky(build_dir)
+            if "___IMGS" in line:
+                lines[i] = handle_imgs(line, build_dir)
     return lines
 
 if __name__ == "__main__":
