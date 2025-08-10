@@ -6,29 +6,32 @@ from pathlib import Path
 IMG_SUFFIXES = { ".png", ".jpg", ".jpeg", ".bmp" }
 
 def handle_latest_bsky(build_dir: Path) -> str:
-    with open(build_dir / "bsky_latest.txt", "r") as f:
-        lines = f.readlines()
+    try:
+        with open(build_dir / "bsky_latest.txt", "r") as f:
+            lines = f.readlines()
 
-    b_date, b_post, b_post_touhou = lines
+        b_date, b_post, b_post_touhou = lines
 
-    template = f"""
-    <h3>Most recent bsky posts</h3>
+        template = f"""
+        <h3>Most recent bsky posts</h3>
 
-    <p>(last checked: {b_date})</p>
+        <p>(last checked: {b_date})</p>
 
-    <div class="bsky_containers">
-        <div class="bsky_box">
-            <p>Most recent post</p>
-            {b_post}
+        <div class="bsky_containers">
+            <div class="bsky_box">
+                <p>Most recent post</p>
+                {b_post}
+            </div>
+
+            <div class="bsky_box">
+                <p>Most recent #touhou post</p>
+                {b_post_touhou}
+            </div>
         </div>
-
-        <div class="bsky_box">
-            <p>Most recent #touhou post</p>
-            {b_post_touhou}
-        </div>
-    </div>
-    """
-    return template
+        """
+        return template
+    except FileNotFoundError:
+        return "<!-- (bsky integration missing) -->"
 
 def handle_imgs(line: str, build_dir: Path) -> str:
     text = line.strip()
