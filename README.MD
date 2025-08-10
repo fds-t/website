@@ -1,4 +1,4 @@
-# Website
+# Website ![](src/favicon.png)
 
 This the repo for my website. I have barely ever used html/css, so please enjoy all the horrible code to your heart's content.
 
