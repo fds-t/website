@@ -8,7 +8,9 @@ Now, a sensible person would likely use an already existing static site generato
 
 ## Requirements
 
-The regular site requires nothing more than what's included with `python3` itself.
+A "resources" folder named `res/` is expected to be in the same directory as the script itself.
+
+Outside of bsky integration, the regular site requires nothing more than what's included with `python3` itself.
 
 For bsky integration, the following libraries are also required:
 
