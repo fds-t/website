@@ -6,11 +6,16 @@
         <title>Social links</title>
         <link href="/style.css" rel="stylesheet">
         <link rel="icon" type="image/x-icon" href="/favicon.png">
+        <style>
+            .eval_form {
+                margin-top: 100%;
+            }
+        </style>
     </head>
     <body>
         <p>Social links for <code>fds_t</code>. That's where all the art and stuff is.</p>
         <ul>
-            <!-- Use DID for bsky in case i change the domain -->
+            <!-- Note: Use DID for bsky in case I change the name/domain -->
             <li><a href="https://bsky.app/profile/did:plc:vswnri7goqzhoe3cj5zss2ea">bluesky</a></li>
             <li><a href="https://tumblr.com/fds-t">tumblr</a></li>
             <li><a href="https://pixiv.me/fds_t">pixiv</a></li>
@@ -18,15 +23,9 @@
             <li><a href="/">website</a></li>
         </ul>
 
-        <!-- I hear using <br> is great website design! -->
-        <br>
-        <br>
-        <br>
-
-        <form id="cool form">
-            <p>Bonus form to evaluate arbitrary javascript<br>
-                <textarea type="text" id="cool text field"></textarea><button>eval</button>
-            </p>
+        <form id="cool form" class="eval_form">
+            <p>Bonus form to evaluate arbitrary javascript</p>
+            <textarea type="text" id="cool text field"></textarea><button>eval</button>
         </form>
 
         <script>
