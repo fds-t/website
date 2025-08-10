@@ -6,7 +6,7 @@ This is my website. I have barely ever used html/css, so please enjoy all the ho
 
 As of right now, the website is hosted at [neocities](https://neocities.org). Since neocities only hosts static sites, you have to generate it yourself.
 
-Now, a sensible person would likely use an already existing templating engine such as jekyll, however, I don't care, so instead I'm using my own strange python script to do it for me.
+Now, a sensible person would likely use an already existing templating engine such as jekyll, however, I don't care, so instead I'm using my own strange python script to do it for me (warning: script is very hacky!)
 
 Run it like so:
 

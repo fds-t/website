@@ -1,4 +1,5 @@
 .vscode/
+__pycache__/
 build/
 res/
 bsky_info
