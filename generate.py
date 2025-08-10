@@ -5,7 +5,7 @@ from pathlib import Path
 
 IMG_SUFFIXES = { ".png", ".jpg", ".jpeg", ".bmp" }
 
-def handle_latest_bsky(build_dir: Path):
+def handle_latest_bsky(build_dir: Path) -> str:
     with open(build_dir / "bsky_latest.txt", "r") as f:
         lines = f.readlines()
 
@@ -83,15 +83,15 @@ if __name__ == "__main__":
     parser.add_argument("--ignore_bsky", action="store_true")
     args = parser.parse_args()
 
-
     cwd = Path(os.getcwd())
-    build_dir: Path = cwd / args.o
-    out_site: Path = build_dir / "site/"
+    source_site_dir: Path = cwd / args.i
+    build_dir: Path       = cwd / args.o
+    build_site_dir: Path  = build_dir / "site/"
 
-    if os.path.exists(out_site):
+    if os.path.exists(build_site_dir):
         print("Built site directory already exists!")
-        print("  Removing built site directory", out_site)
-        shutil.rmtree(out_site)
+        print("  Removing built site directory", build_site_dir)
+        shutil.rmtree(build_site_dir)
 
     if args.clean:
         if os.path.exists(build_dir):
@@ -100,16 +100,14 @@ if __name__ == "__main__":
             shutil.rmtree(build_dir)
         exit()
 
-    source_dir: Path = Path(os.getcwd()) / args.i
+    build_res_dir = build_site_dir / "res/"
 
-    out_res = out_site / "res/"
-
-    shutil.copytree(cwd / "res/", out_res)
+    shutil.copytree(cwd / "res/", build_res_dir)
 
     print("files in res:")
     img_files = []
-    for x in out_res.rglob("*"):
-        file_path = Path(str(x).replace(str(out_res), "/res"))
+    for x in build_res_dir.rglob("*"):
+        file_path = Path(str(x).replace(str(build_res_dir), "/res"))
 
         print("   ", file_path, end="")
 
@@ -119,17 +117,17 @@ if __name__ == "__main__":
         else:
             print()
 
-    with open(out_res / "art" / "test_all.txt", "w") as f:
+    with open(build_res_dir / "art" / "test_all.txt", "w") as f:
         f.writelines([str(file) + "\n" for file in img_files])
 
     if not args.ignore_bsky:
         from generate_bsky import create_bsky_latest
         create_bsky_latest(build_dir)
 
-    for x in source_dir.rglob("*"):
+    for x in source_site_dir.rglob("*"):
         lines = process_file(x, build_dir)
         if lines is not None:
-            file_path = Path(str(x).replace(str(source_dir), str(out_site)))
+            file_path = Path(str(x).replace(str(source_site_dir), str(build_site_dir)))
             file_path.parent.mkdir(exist_ok=True, parents=True)
             if type(lines) is bytes:
                 with open(file_path, "wb") as f:

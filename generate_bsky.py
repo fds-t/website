@@ -1,13 +1,15 @@
 from pathlib import Path
+from typing import Any
 from atproto import Client
 import atproto_client
+from atproto_client.models.app.bsky.richtext.facet import Tag
 from datetime import date
 import requests
 
 def curr_date() -> str:
     return date.today().isoformat()
 
-def bsky_latest_post(client, tag=None):
+def bsky_latest_post(client, tag=None) -> str:
     result = bsky_get_latest_actor_post(client.me.did, client, tag)
     if result is not None:
         actor_did, post_did = result
@@ -33,19 +35,19 @@ def bsky_get_credentials() -> tuple[str, str]:
     return username, password
 
 # TODO: make this less terrible
-def bsky_is_tag_in_facets(facets, tag) -> bool:
+def bsky_is_tag_in_facets(facets: list[Tag|Any]|None, tag: str) -> bool:
     if facets is None:
         return False
 
     for facet in facets:
-        for feature in facet.features:
-            if type(feature) == atproto_client.models.app.bsky.richtext.facet.Tag:
+        for feature in facet.features: 
+            if type(feature) == Tag:
                 if feature.tag == tag:
                     return True
     return False
 
 # TODO: this one too
-def bsky_get_latest_actor_post(actor_did, client, tag=None) -> tuple[str,str] | None:
+def bsky_get_latest_actor_post(actor_did: str, client: Client, tag: str|None = None) -> tuple[str,str] | None:
     cursor = ""
     post_did = None
 
@@ -55,14 +57,11 @@ def bsky_get_latest_actor_post(actor_did, client, tag=None) -> tuple[str,str] | 
         cursor = response.cursor
         for postview in feed:
             if postview.post.author.did == actor_did:
-                if tag is None or bsky_is_tag_in_facets(postview.post.record.facets, tag):
+                if tag is None or bsky_is_tag_in_facets(postview.post.record.facets, tag):  # pyright: ignore[reportAttributeAccessIssue, reportUnknownArgumentType, reportUnknownMemberType]
                     actor_did, post_did = postview.post.author.did, postview.post.uri.split("/")[-1]
                     return actor_did, post_did
-            else:
-                # print(f"{postview.post.author.did} != {actor_did}")
-                pass
 
-def fetch_latest_bsky(client):
+def fetch_latest_bsky(client: Client) -> tuple[str, str, str]:
     b_date = curr_date()
     b_post = bsky_latest_post(client)
     b_post_touhou = bsky_latest_post(client, tag="touhou")
