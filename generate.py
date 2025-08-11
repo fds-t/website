@@ -75,6 +75,25 @@ def process_file(filename: Path, build_dir: Path):
                 lines[i] = handle_imgs(line, build_dir)
     return lines
 
+def index_res_dir(build_res_dir: Path):
+    print("files in res:")
+
+    art_files = []
+    for x in build_res_dir.rglob("*"):
+        file_path = Path(str(x).replace(str(build_res_dir), "/res"))
+
+        print("   ", file_path, end="")
+
+        if file_path.suffix in IMG_SUFFIXES and "/res/art" in str(file_path):
+            art_files.append(file_path)
+            print(" (img)")
+        else:
+            print()
+
+    build_art_dir = build_res_dir / "art"
+    with open(build_art_dir / "test_all.txt", "w") as f:
+        f.writelines([str(file) + "\n" for file in art_files])
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="generate",
@@ -107,21 +126,7 @@ if __name__ == "__main__":
 
     shutil.copytree(cwd / "res/", build_res_dir)
 
-    print("files in res:")
-    img_files = []
-    for x in build_res_dir.rglob("*"):
-        file_path = Path(str(x).replace(str(build_res_dir), "/res"))
-
-        print("   ", file_path, end="")
-
-        if file_path.suffix in IMG_SUFFIXES:
-            img_files.append(file_path)
-            print(" (img)")
-        else:
-            print()
-
-    with open(build_res_dir / "art" / "test_all.txt", "w") as f:
-        f.writelines([str(file) + "\n" for file in img_files])
+    index_res_dir(build_res_dir)
 
     if not args.ignore_bsky:
         from generate_bsky import create_bsky_latest
