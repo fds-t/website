@@ -24,10 +24,20 @@ echo "Cleaning site..."
 mkdir tmp
 cd tmp
 neocities pull
-neocities delete $(diff -q -r . ../$1 \
-    | grep -E "Only in .:|Only in ./"\
-    | sed -r "s/Only in .(.+?): (.+)/\1\/\2 /"\
-    | cut -c 2-\
-    | tr -d '\n')
+# This probably also works on linux but i can't be bothered
+# to actually check rn, at least the other one has been tested :P
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    neocities delete $(diff -q -r . ../$1 \
+        | grep -E "Only in .:|Only in ./"\
+        | sed -E "s/Only in .([^:]*): (.+)/\1\/\2 /"\
+        | cut -c 2-\
+        | tr -d '\n')
+else
+    neocities delete $(diff -q -r . ../$1 \
+        | grep -E "Only in .:|Only in ./"\
+        | sed -r "s/Only in .(.+?): (.+)/\1\/\2 /"\
+        | cut -c 2-\
+        | tr -d '\n')
+fi
 cd ..
 rm -r tmp
