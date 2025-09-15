@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>test page</title>
+        <link href="/style.css" rel="stylesheet">
+        <link rel="icon" type="image/x-icon" href="/favicon.png">
+        <style>
+        img {
+            width: 100%;
+            max-width: 600px;
+        }
+        </style>
+    </head>
+    <body>
+
+        <form id="secret_form">
+            <p>What do you want to access?</p>
+            <input type="text" id="text_field"></input><button>submit</button>
+        </form>
+
+        <div id="secret_img"></div>
+
+        <script>
+            const secret_img = document.getElementById("secret_img");
+
+            const form = document.getElementById("secret_form");
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const text = document.getElementById("text_field");
+                const encodedtext = new TextEncoder().encode(text.value);
+                const hashBuf = await window.crypto.subtle.digest("SHA-256", encodedtext);
+                const hashArray = Array.from(new Uint8Array(hashBuf));
+                const hash = hashArray
+                    .map(b => b.toString(16).padStart(2, "0"))
+                    .join("");
+                console.log(hash);
+
+                const filename = `/res/${hash}.txt`;
+                try {
+                    const r = await fetch(filename);
+                    if (r.status === 200) {
+                        const t = await r.text();
+                        secret_img.innerHTML = `<img src='${t}'>`;
+                    } else {
+                        secret_img.innerHTML = `<p>Invalid password!</p>`;
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            });
+        </script>
+    </body>
+</html>
