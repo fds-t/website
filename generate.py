@@ -15,7 +15,7 @@ def handle_latest_bsky(build_dir: Path) -> str:
         template = f"""
         <h3>Most recent bsky posts</h3>
 
-        <p>(last checked: {b_date})</p>
+        <p>(last checked: {b_date} (note: checking done manually lol))</p>
 
         <div class="bsky_containers">
             <div class="bsky_box">
