@@ -4,6 +4,10 @@ body {
     max-width:800px;
 }
 
+.pixel {
+    image-rendering: pixelated;
+}
+
 @media (max-width: 768px) {
     body {
 		margin: 1em auto;
