@@ -24,7 +24,7 @@ def handle_latest_bsky(build_dir: Path) -> str:
             </div>
 
             <div class="bsky_box">
-                <p>Most recent #touhou post</p>
+                <p>Most recent <a href="https://bsky.app/hashtag/touhou?author=fds-t.bsky.social">#touhou</a> post</p>
                 {b_post_touhou}
             </div>
         </div>
