@@ -82,6 +82,11 @@ def index_res_dir(build_res_dir: Path):
     for x in build_res_dir.rglob("*"):
         file_path = Path(str(x).replace(str(build_res_dir), "/res"))
 
+        if file_path.name.startswith("_"):
+            print("  ", file_path, "starts with '_'! removing", x, "...")
+            os.remove(x)
+            continue
+
         print("   ", file_path, end="")
 
         if file_path.suffix in IMG_SUFFIXES and "/res/art" in str(file_path):
@@ -133,10 +138,15 @@ if __name__ == "__main__":
         create_bsky_latest(build_dir)
 
     for x in source_site_dir.rglob("*"):
+        file_path = Path(str(x).replace(str(source_site_dir), str(build_site_dir)))
+        file_path.parent.mkdir(exist_ok=True, parents=True)
+
+        if file_path.name.startswith("_"):
+            print(file_path, "starts with '_'! ignoring...")
+            continue
+
         lines = process_file(x, build_dir)
         if lines is not None:
-            file_path = Path(str(x).replace(str(source_site_dir), str(build_site_dir)))
-            file_path.parent.mkdir(exist_ok=True, parents=True)
             if type(lines) is bytes:
                 with open(file_path, "wb") as f:
                     f.write(lines)
