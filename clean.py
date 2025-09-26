@@ -39,7 +39,7 @@ def clean_site(api_key: str, build_dir: str):
                 print(r.text)
     else:
         print(f"Request failed: {r.status_code}\n{r.text}")
-        print("Is the correct api key loacted in 'neocities_info'?")
+        print("Is the correct api key located in 'neocities_info'?")
 
 if __name__ == "__main__":
     if len(sys.argv) != 3 or sys.argv[1] != "-o":
