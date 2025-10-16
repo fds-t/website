@@ -8,7 +8,9 @@ Now, a sensible person would likely use an already existing static site generato
 
 ## Requirements
 
-A "resources" folder named `res/` is expected to be in the same directory as the script.
+A "resource" folder named `res/` is expected to lie in the root of this repository.
+
+### Site generation
 
 Outside of bsky integration, the regular site requires nothing more than what's included with `python3` itself.
 
@@ -17,7 +19,12 @@ For bsky integration, the following libraries are also required:
 - `requests`
 - `atproto`
 
-Additionally, to be able to fetch the bsky posts, authentication is required. The script expects a file called `bsky_info` containing a username and password separated by a space to lie in the same directory as the script.
+Additionally, to be able to fetch the bsky posts, authentication is required. The script expects a file called `bsky_info` containing a username and password separated by a space to lie in the same directory as the `generate.py` script.
+
+### Neocities uploading / cleaning the site
+
+For uploading to and cleaning the site, the `requests` library is required. A file called `neocities_info` containing the api key of the site is expected to lie in the same directory as the `neo.py` script.
+
 
 ## Building
 
@@ -41,4 +48,8 @@ And upload it:
 # Or, do a 'clean' upload of everything
 # (removes all files not in the local build/site/ directory)
 ~ $ python3 neo.py cleanupload -o build/
+
+# This is the same as running:
+# ~ $ python3 neo.py clean -o build/
+# ~ $ python3 neo.py upload -o build/
 ```
