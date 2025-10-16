@@ -83,6 +83,8 @@ def upload_site(api_key: str, build_dir: str):
                 path = Path(str(file).removeprefix(str(build_site_dir)))
                 if path.suffix in ILLEGAL_FILE_TYPES or path.name == ".DS_Store":
                     print("   Ignoring illegal file:", path)
+                elif file.is_dir():
+                    print("   Ignoring directory:", path)
                 else:
                     print("  Found file to upload:", path)
                     to_handle.append((path, file))
