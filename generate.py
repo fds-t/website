@@ -3,7 +3,7 @@ import shutil
 import argparse
 from pathlib import Path
 
-IMG_SUFFIXES = { ".png", ".jpg", ".jpeg", ".bmp" }
+IMG_SUFFIXES = { ".png", ".jpg", ".jpeg", ".bmp", ".gif" }
 
 def handle_latest_bsky(build_dir: Path) -> str:
     try:
