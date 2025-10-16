@@ -36,9 +36,9 @@ And upload it:
 
 ```sh
 # Upload everything in the build/site/ directory
-~ $ neocities push build/site/
+~ $ python3 neo.py upload -o build/site/
 
 # Or, do a 'clean' upload of everything
 # (removes all files not in the local build/site/ directory)
-~ $ ./clean_neocities.sh build/site/ && neocities push build/site/
+~ $ python3 neo.py cleanupload -o build/
 ```
