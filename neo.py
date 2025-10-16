@@ -1,4 +1,3 @@
-import os
 import sys
 import requests
 import hashlib
@@ -22,14 +21,13 @@ def clean_site(api_key: str, build_dir: str):
     if r.status_code == 200:
         j = r.json()
 
-        cwd = Path(os.getcwd())
-        build_dir: Path      = cwd / "build/"
+        build_dir: Path      = Path(build_dir)
         build_site_dir: Path = build_dir / "site/"
 
-        local_files = set(build_site_dir.rglob("*"))
-        server_files = set(map(lambda e: build_site_dir / e["path"], j["files"]))
+        local_files: set[Path]  = set(build_site_dir.rglob("*"))
+        server_files: set[Path] = set(map(lambda e: build_site_dir / e["path"], j["files"]))
 
-        to_remove = []
+        to_remove: list[Path] = []
         for file in server_files:
             if file not in local_files:
                 path = Path(str(file).removeprefix(str(build_site_dir)))
@@ -60,8 +58,7 @@ def upload_site(api_key: str, build_dir: str):
     if r.status_code == 200:
         j = r.json()
 
-        cwd = Path(os.getcwd())
-        build_dir: Path      = cwd / "build/"
+        build_dir: Path      = Path(build_dir)
         build_site_dir: Path = build_dir / "site/"
 
         local_files = set(build_site_dir.rglob("*"))
@@ -77,24 +74,24 @@ def upload_site(api_key: str, build_dir: str):
             )
         )
 
-        to_handle = []
-        for (file, hash) in local_files_m:
-            if (file, hash) not in server_files:
-                path = Path(str(file).removeprefix(str(build_site_dir)))
-                if path.suffix in ILLEGAL_FILE_TYPES or path.name == ".DS_Store":
-                    print("   Ignoring illegal file:", path)
-                elif file.is_dir():
-                    print("   Ignoring directory:", path)
+        to_handle: list[tuple[Path,Path]] = []
+        for (local_path, hash) in local_files_m:
+            if (local_path, hash) not in server_files:
+                server_path = Path(str(local_path).removeprefix(str(build_site_dir)))
+                if server_path.suffix in ILLEGAL_FILE_TYPES or server_path.name == ".DS_Store":
+                    print("   Ignoring illegal file:", server_path)
+                elif local_path.is_dir():
+                    print("   Ignoring directory:", server_path)
                 else:
-                    print("  Found file to upload:", path)
-                    to_handle.append((path, file))
+                    print("  Found file to upload:", server_path)
+                    to_handle.append((server_path, local_path))
 
         if len(to_handle) == 0:
             print("Nothing to do!")
         else:
             print("Uploading files...")
 
-            args = {str(path): open(file, "rb") for (path, file) in to_handle}
+            args = {str(server_path): open(local_path, "rb") for (server_path, local_path) in to_handle}
             r = requests.post(f"https://neocities.org/api/upload", files=args, headers=header)
             if r.status_code == 200:
                 print("Successfully uploaded files!")
