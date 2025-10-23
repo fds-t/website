@@ -73,6 +73,37 @@ def handle_json(start_line: int, lines: list[str], objs: dict[str, Any]):
     for j in range(start_line, i+1):
         lines[j] = ""
 
+def handle_oc_box(line: str, objs: dict[str, Any]) -> str:
+    text = line.strip()
+    start = text.find("{") + 1
+    end = text.find("}")
+
+    oc_name = text[start:end]
+
+    oc: dict[str, Any] = objs[oc_name]
+
+    innerhtml = '<div class="oc_info_box_box">'
+    innerhtml += f'<p><b>{oc["name"]}</b></p>'
+    innerhtml += '<div class="oc_info_box">'
+    innerhtml += f'<img class="oc_image" src={oc["image"]}></img>'
+    innerhtml += f'<p>{oc["description"]}</p>'
+    innerhtml += '</div>'
+
+    if "details" in oc.keys():
+        details = oc["details"]
+        innerhtml += '<details>'
+        innerhtml += '<summary>'
+        innerhtml += details["summary"]
+        innerhtml += '</summary>'
+        innerhtml += f'<a href="{details["image"]}">'
+        innerhtml += f'<img class="oc_design" src="{details["image"]}"></img>'
+        innerhtml += '</a>'
+        innerhtml += '</details>'
+
+    innerhtml += '</div>'
+
+    return innerhtml
+
 def process_file(filename: Path, build_dir: Path):
     local_objs= {}
 
@@ -100,6 +131,9 @@ def process_file(filename: Path, build_dir: Path):
                 lines[i] = handle_imgs(line, build_dir)
             if "___JSON" in line:
                 handle_json(i, lines, local_objs)
+            if "___OC_BOX" in line:
+                lines[i] = handle_oc_box(line, local_objs)
+
     return lines
 
 def index_res_dir(build_res_dir: Path):

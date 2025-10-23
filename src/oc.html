@@ -21,38 +21,38 @@
             .oc_design {
                 max-width: 100%;
             }
+
+            details > summary {
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
         <h1>Obligatory OCs page</h1>
 
-        Every artist's site I visit has one of these pages.
+        <p>Every artist's site I visit has one of these pages.</p>
 
-        <p><b>OC fox girl</b></p>
+        ___JSON{"oc_girl"}
+        {
+            "name": "OC fox girl",
+            "image": "/res/art/oc_girl_512px.png",
+            "description": "This is my OC fox girl, who is also literally the only OC I have. And also doesn't have a name. Originally made as a joke cause a bunch of people on my twitter tl were making OCs at around the same time, and again repurposed for <a href='https://bsky.app/profile/did:plc:vswnri7goqzhoe3cj5zss2ea/post/3llqmy2rqy22x'>an april fools joke</a> (yes, it actually isn't Momiji.)<br>She doesn't really have any \"lore\" or anything like that (well, except <a href='https://bsky.app/profile/did:plc:vswnri7goqzhoe3cj5zss2ea/post/3llruobm5mc2l'>this</a> I guess), she's mostly just a character that I draw for fun, and that's about it.",
+            "details": {
+                "summary": "Design doc",
+                "image": "/res/art/oc_girl_a_small.png"
+            }
+        }
+        ___END_JSON
 
-        <div class="oc_info_box">
-            <img src="/res/art/oc_girl_512px.png" class="oc_image">
-            <p>
-                This is my OC fox girl, who is also literally the only OC I have. And also doesn't have a name. Originally made as a joke cause a bunch of people on my twitter tl were making OCs at around the same time, and again repurposed for <a href="https://bsky.app/profile/did:plc:vswnri7goqzhoe3cj5zss2ea/post/3llqmy2rqy22x">an april fools joke</a> (yes, it actually isn't Momiji.)
-                <br>
-                She doesn't really have any "lore" or anything like that (well, except <a href="https://bsky.app/profile/did:plc:vswnri7goqzhoe3cj5zss2ea/post/3llruobm5mc2l">this</a> I guess), she's mostly just a character that I draw for fun, and that's about it.
-            </p>
-        </div>
+        ___JSON{"oc_girl_test"}
+        {
+            "name": "OC fox girl 2 placeholder text testasdfawesfd",
+            "image": "/res/art/oc_girl_512px.png",
+            "description": "This isn't a different one I'm just testing the html stuff"
+        }
+        ___END_JSON
 
-        <details>
-            <summary>Design doc</summary>
-            <a href="/res/art/oc_girl_a_small.png">
-                <img src="/res/art/oc_girl_a_small.png" class="oc_design">
-            </a>
-        </details>
-
-        <p><b>OC fox girl 2 placeholder text testasdfawesfd</b></p>
-
-        <div class="oc_info_box">
-            <img src="/res/art/oc_girl_512px.png" class="oc_image">
-            <p>
-                This isn't a different one I'm just testing the html stuff
-            </p>
-        </div>
+        ___OC_BOX{"oc_girl"}
+        ___OC_BOX{"oc_girl_test"}
     </body>
 </html>
