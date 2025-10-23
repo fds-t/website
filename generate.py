@@ -1,7 +1,9 @@
 import os
 import shutil
 import argparse
+import json
 from pathlib import Path
+from typing import Any
 
 IMG_SUFFIXES = { ".png", ".jpg", ".jpeg", ".bmp", ".gif" }
 
@@ -52,7 +54,28 @@ def handle_imgs(line: str, build_dir: Path) -> str:
     innerhtml += '</div">'
     return innerhtml
 
+def handle_json(start_line: int, lines: list[str], objs: dict[str, Any]):
+    text = lines[start_line].strip()
+    start = text.find("{") + 1
+    end = text.find("}")
+
+    obj_name = text[start:end]
+
+    i = start_line + 1
+    json_lines = ""
+    while "___END_JSON" not in lines[i]:
+        json_lines += lines[i]
+        i += 1
+
+    objs[obj_name] = json.loads(json_lines)
+    print("    Created local object", obj_name)
+
+    for j in range(start_line, i+1):
+        lines[j] = ""
+
 def process_file(filename: Path, build_dir: Path):
+    local_objs= {}
+
     print(f"  processing {filename}! process process...")
 
     if not os.path.isfile(filename):
@@ -66,13 +89,17 @@ def process_file(filename: Path, build_dir: Path):
 
     with open(filename, "r") as f:
         lines = f.readlines()
-    for i,line in enumerate(lines):
+
+    for i in range(len(lines)):
+        line = lines[i]
         if "___" in line:
             print("   FOUND LINE TO MESS WITH:", repr(line))
             if "___BSKY_LATEST" in line:
                 lines[i] = handle_latest_bsky(build_dir)
             if "___IMGS" in line:
                 lines[i] = handle_imgs(line, build_dir)
+            if "___JSON" in line:
+                handle_json(i, lines, local_objs)
     return lines
 
 def index_res_dir(build_res_dir: Path):
