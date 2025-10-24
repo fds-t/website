@@ -81,26 +81,31 @@ def handle_oc_box(line: str, objs: dict[str, Any]) -> str:
     oc_name = text[start:end]
 
     oc: dict[str, Any] = objs[oc_name]
-
-    innerhtml = '<div class="oc_info_box_box">'
-    innerhtml += f'<p><b>{oc["name"]}</b></p>'
-    innerhtml += '<div class="oc_info_box">'
-    innerhtml += f'<img class="oc_image" src={oc["image"]}></img>'
-    innerhtml += f'<p>{oc["description"]}</p>'
-    innerhtml += '</div>'
+    details_innerhtml = ""
 
     if "details" in oc.keys():
         details = oc["details"]
-        innerhtml += '<details>'
-        innerhtml += '<summary>'
-        innerhtml += details["summary"]
-        innerhtml += '</summary>'
-        innerhtml += f'<a href="{details["image"]}">'
-        innerhtml += f'<img class="oc_design" src="{details["image"]}"></img>'
-        innerhtml += '</a>'
-        innerhtml += '</details>'
+        details_innerhtml = f'''
+        <details>
+            <summary>
+                {details["summary"]}
+            </summary>'
+            <a href="{details["image"]}">
+                <img class="oc_design" src="{details["image"]}"></img>
+            </a>
+        </details>
+        '''
 
-    innerhtml += '</div>'
+    innerhtml = f'''
+    <div class="oc_info_box_box">
+        <p><b>{oc["name"]}</b></p>
+        <div class="oc_info_box">
+            <img class="oc_image" src={oc["image"]}></img>
+            <p>{oc["description"]}</p>
+        </div>
+        {details_innerhtml}
+    </div>
+    '''
 
     return innerhtml
 
