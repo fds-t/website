@@ -52,7 +52,27 @@
         }
         ___END_JSON
 
-        ___OC_BOX{"oc_girl"}
-        ___OC_BOX{"oc_girl_test"}
+        ___TEMPLATE{oc_box}{oc_obj: json_obj}
+        <div class="oc_info_box_box">
+            <p><b>___{oc_obj.name}</b></p>
+            <div class="oc_info_box">
+                <img class="oc_image" src="___{oc_obj.image}"></img>
+                <p>___{oc_obj.description}</p>
+            </div>
+            ___IF{___OBJ_HAS{oc_obj, details}}
+            <details>
+                <summary>
+                    ___{oc_obj.details.summary}
+                </summary>
+                <a href="___{oc_obj.details.image}">
+                    <img class="oc_design" src="___{oc_obj.details.image}"></img>
+                </a>
+            </details>
+            ___END_IF
+        </div>
+        ___END_TEMPLATE
+
+        ___GEN_TEMPLATE{oc_box}{"oc_girl"}
+        ___GEN_TEMPLATE{oc_box}{"oc_girl_test"}
     </body>
 </html>
