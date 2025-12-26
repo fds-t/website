@@ -4,6 +4,11 @@ body {
     max-width:800px;
 }
 
+footer {
+    width: 100%;
+    float: left;
+}
+
 .pixel {
     image-rendering: pixelated;
 }
