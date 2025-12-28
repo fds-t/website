@@ -3,7 +3,8 @@ import requests
 import hashlib
 from pathlib import Path
 
-ILLEGAL_FILE_TYPES = {".DS_Store"}
+ILLEGAL_FILES= {".DS_Store"}
+ILLEGAL_FILE_TYPES = {}
 
 def hash_file(filename: Path) -> str|None:
     if filename.is_dir():
@@ -78,7 +79,7 @@ def upload_site(api_key: str, build_dir: str):
         for (local_path, hash) in local_files_m:
             if (local_path, hash) not in server_files:
                 server_path = Path(str(local_path).removeprefix(str(build_site_dir)))
-                if server_path.suffix in ILLEGAL_FILE_TYPES or server_path.name == ".DS_Store":
+                if server_path.suffix in ILLEGAL_FILE_TYPES or server_path.name in ILLEGAL_FILES:
                     print("   Ignoring illegal file:", server_path)
                 elif local_path.is_dir():
                     print("   Ignoring directory:", server_path)
